@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  name   String
+  email  String
+  avatar String
+  slug   String
+
+  inks        Ink[]
+  collections Collection[]
+}
+
+model Ink {
+  id String @id @default(uuid())
+
+  source   String
+  rendered String
+
+  creator   User @relation(fields: [creatorId], references: [id])
+  creatorId Int
+
+  collections InkInCollection[]
+}
+
+model Collection {
+  id String @id @default(uuid())
+
+  name String
+
+  curator   User @relation(fields: [curatorId], references: [id])
+  curatorId Int
+
+  inks InkInCollection[]
+}
+
+model InkInCollection {
+  ink   Ink    @relation(fields: [inkId], references: [id])
+  inkId String
+
+  collection   Collection @relation(fields: [collectionId], references: [id])
+  collectionId String
+
+  @@id([inkId, collectionId])
+}
