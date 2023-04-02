@@ -7,4 +7,8 @@ export const navItems = [
     title: "Create",
     url: "/create",
   },
+  {
+    title: "Feeling Lucky",
+    url: "/lucky",
+  },
 ];
