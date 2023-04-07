@@ -3,3 +3,32 @@
 body {
   font-family: "Inter", system-ui, sans-serif;
 }
+
+.editor-container {
+  height: 89vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-parent {
+  height: 100%;
+  flex: 1;
+}
+
+.monaco-editor .suggest-widget {
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.editor-parent > section {
+  z-index: 999;
+}
+
+.hover-contents {
+  z-index: 9999;
+}
+
+.editor-split {
+  height: 100%;
+  display: flex;
+}

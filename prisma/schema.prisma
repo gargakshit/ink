@@ -23,10 +23,13 @@ model User {
 }
 
 model Ink {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
 
   source   String
-  rendered String
+  rendered String?
+
+  name String
+  slug String @unique
 
   creator   User @relation(fields: [creatorId], references: [id])
   creatorId Int
@@ -35,9 +38,10 @@ model Ink {
 }
 
 model Collection {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
 
   name String
+  slug String @unique
 
   curator   User @relation(fields: [curatorId], references: [id])
   curatorId Int
@@ -46,11 +50,11 @@ model Collection {
 }
 
 model InkInCollection {
-  ink   Ink    @relation(fields: [inkId], references: [id])
-  inkId String
+  ink   Ink @relation(fields: [inkId], references: [id])
+  inkId Int
 
   collection   Collection @relation(fields: [collectionId], references: [id])
-  collectionId String
+  collectionId Int
 
   @@id([inkId, collectionId])
 }

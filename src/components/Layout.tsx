@@ -6,7 +6,7 @@ export default function Layout({ children }: { children: JSX.Element }) {
   return (
     <div style={{ maxWidth: "100%", boxSizing: "border-box" }}>
       <Nav />
-      {children}
+      <div style={{ padding: "16px" }}>{children}</div>
     </div>
   );
 }

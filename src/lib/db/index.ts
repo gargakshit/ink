@@ -10,3 +10,7 @@ export function generateSlug(text: string): string {
 
   return s + "-" + u;
 }
+
+export * from "./inks";
+export * from "./types";
+export * from "./users";
