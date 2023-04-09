@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Head from "next/head";
 import type { GetServerSideProps } from "next";
 import { getServerSession } from "next-auth";
@@ -31,32 +31,38 @@ export default function EditorPage(props: Props) {
     workerRef.current?.postMessage(msg);
   }
 
-  function save(value: string) {
-    if (canEdit) {
-      window.onbeforeunload = () => "Saving...";
-      scheduleRequest(async () => {
-        await fetch(`/api/ink/${props.ink.id}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ rendered: value }),
+  const save = useCallback(
+    (value: string) => {
+      if (canEdit) {
+        window.onbeforeunload = () => "Saving...";
+        scheduleRequest(async () => {
+          await fetch(`/api/ink/${ink.id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ rendered: value }),
+          });
+          window.onbeforeunload = null;
         });
-        window.onbeforeunload = null;
-      });
-    }
-  }
+      }
+    },
+    [ink, canEdit]
+  );
 
-  function onWorkerMessage(msg: InkWorkerResponse) {
-    switch (msg.type) {
-      case "renderResult":
-        setRendered(msg.args.svg);
-        save(msg.args.svg);
-        break;
+  const onWorkerMessage = useCallback(
+    (msg: InkWorkerResponse) => {
+      switch (msg.type) {
+        case "renderResult":
+          setRendered(msg.args.svg);
+          save(msg.args.svg);
+          break;
 
-      case "console":
-        setLogs((logs) => [...logs, msg.args]);
-        break;
-    }
-  }
+        case "console":
+          setLogs((logs) => [...logs, msg.args]);
+          break;
+      }
+    },
+    [ink]
+  );
 
   useEffect(() => {
     const worker = new Worker(new URL("@/lib/worker/ink.ts", import.meta.url));
@@ -68,7 +74,7 @@ export default function EditorPage(props: Props) {
       workerRef.current = undefined;
       worker.terminate();
     };
-  }, []);
+  }, [ink, canEdit]);
 
   function getTitle() {
     return `${canEdit ? "Editing" : "Viewing"} "${props.ink.name}" | Ink`;
