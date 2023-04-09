@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Head from "next/head";
 import type { GetServerSideProps } from "next";
 import { getServerSession } from "next-auth";
 
-import InkEditor from "@/components/Editor";
+import InkEditor from "@/components/InkEditor";
 import { loadInk } from "@/lib/db";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { InkWorkerRequest, InkWorkerResponse } from "@/lib/worker/rpc";
+import InkViewer from "@/components/InkViewer";
 
 type Props = {
   canEdit: boolean;
@@ -16,6 +18,33 @@ export default function EditorPage(props: Props) {
   const [ink, setInk] = useState(props.ink);
   const [canEdit, setCanEdit] = useState(props.canEdit);
   const [title, setTitle] = useState(getTitle());
+  const [rendered, setRendered] = useState<string | undefined>(undefined);
+
+  const workerRef = useRef<Worker>();
+
+  function requestWorker(msg: InkWorkerRequest) {
+    workerRef.current?.postMessage(msg);
+  }
+
+  function onWorkerMessage(msg: InkWorkerResponse) {
+    switch (msg.type) {
+      case "renderResult":
+        setRendered(msg.args.svg);
+        break;
+    }
+  }
+
+  useEffect(() => {
+    const worker = new Worker(new URL("@/lib/worker/ink.ts", import.meta.url));
+    worker.addEventListener("message", (e) => onWorkerMessage(e.data));
+
+    workerRef.current = worker;
+
+    return () => {
+      workerRef.current = undefined;
+      worker.terminate();
+    };
+  });
 
   function getTitle() {
     return `${canEdit ? "Editing" : "Viewing"} "${props.ink.name}" | Ink`;
@@ -25,6 +54,7 @@ export default function EditorPage(props: Props) {
     setInk(props.ink);
     setCanEdit(props.canEdit);
     setTitle(getTitle());
+    setRendered(props.ink.rendered ?? undefined);
   }
 
   useEffect(() => resetStateFromProps(), [props]);
@@ -38,7 +68,13 @@ export default function EditorPage(props: Props) {
         {/*<div>{ink.name}</div>*/}
         {/*<div>{canEdit ? "Can edit" : "No edit"}</div>*/}
         <div className="editor-split">
-          <InkEditor initialCode={ink.source} canEdit={canEdit} id={ink.id} />
+          <InkEditor
+            initialCode={ink.source}
+            canEdit={canEdit}
+            id={ink.id}
+            onRun={(source) => requestWorker({ type: "run", args: { source } })}
+          />
+          <InkViewer svg={rendered} />
         </div>
       </div>
     </>

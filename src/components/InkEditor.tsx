@@ -30,6 +30,7 @@ interface Props {
   initialCode: string;
   canEdit: boolean;
   id: number;
+  onRun: (source: string) => void;
 }
 
 export default function InkEditor(props: Props) {
@@ -39,10 +40,19 @@ export default function InkEditor(props: Props) {
   const scheduleRequest = debouncer(500, 10000);
 
   useEffect(() => {
-    if (editor) {
-      editor.getModel()?.setValue(props.initialCode);
-    }
-  }, [props]);
+    if (editor) editor.getModel()?.setValue(props.initialCode);
+  }, [props.initialCode]);
+
+  useEffect(() => {
+    const resizeListener = () => {
+      editor?.layout();
+    };
+    window.addEventListener("resize", resizeListener);
+
+    return () => {
+      window.removeEventListener("resize", resizeListener);
+    };
+  }, [editor]);
 
   function onChange(value: string | undefined) {
     window.onbeforeunload = () => "Saving...";
@@ -98,7 +108,9 @@ export default function InkEditor(props: Props) {
       contextMenuGroupId: "navigation",
       contextMenuOrder: 100, // Top?
       run(editor: editor.ICodeEditor, ...args: any): void | Promise<void> {
-        console.log("Run");
+        const source = editor.getModel()!.getValue();
+        // editor.getModel()?.setValue(source)
+        props.onRun(source);
       },
     });
   }
@@ -111,6 +123,7 @@ export default function InkEditor(props: Props) {
         height="100%"
         loading={<Loader />}
         theme="vs-dark"
+        className={"editor-parent"}
         options={{
           minimap: { enabled: false },
           matchBrackets: "always",

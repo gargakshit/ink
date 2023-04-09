@@ -12,7 +12,9 @@ body {
 
 .editor-parent {
   height: 100%;
+  width: 100%;
   flex: 1;
+  position: relative;
 }
 
 .monaco-editor .suggest-widget {
@@ -31,4 +33,9 @@ body {
 .editor-split {
   height: 100%;
   display: flex;
+}
+
+.flex-1 {
+  flex: 1;
+  width: 100%;
 }
