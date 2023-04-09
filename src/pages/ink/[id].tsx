@@ -8,6 +8,7 @@ import { loadInk } from "@/lib/db";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { InkWorkerRequest, InkWorkerResponse } from "@/lib/worker/rpc";
 import InkViewer from "@/components/InkViewer";
+import { debouncer } from "@/utils/debounce";
 
 type Props = {
   canEdit: boolean;
@@ -19,17 +20,40 @@ export default function EditorPage(props: Props) {
   const [canEdit, setCanEdit] = useState(props.canEdit);
   const [title, setTitle] = useState(getTitle());
   const [rendered, setRendered] = useState<string | undefined>(undefined);
+  const [, setLogs] = useState<
+    Array<{ type: "log" | "warn" | "error"; msg: string }>
+  >([]);
 
   const workerRef = useRef<Worker>();
+  const scheduleRequest = debouncer(500, 10000);
 
   function requestWorker(msg: InkWorkerRequest) {
     workerRef.current?.postMessage(msg);
+  }
+
+  function save(value: string) {
+    if (canEdit) {
+      window.onbeforeunload = () => "Saving...";
+      scheduleRequest(async () => {
+        await fetch(`/api/ink/${props.ink.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ rendered: value }),
+        });
+        window.onbeforeunload = null;
+      });
+    }
   }
 
   function onWorkerMessage(msg: InkWorkerResponse) {
     switch (msg.type) {
       case "renderResult":
         setRendered(msg.args.svg);
+        save(msg.args.svg);
+        break;
+
+      case "console":
+        setLogs((logs) => [...logs, msg.args]);
         break;
     }
   }
@@ -44,7 +68,7 @@ export default function EditorPage(props: Props) {
       workerRef.current = undefined;
       worker.terminate();
     };
-  });
+  }, []);
 
   function getTitle() {
     return `${canEdit ? "Editing" : "Viewing"} "${props.ink.name}" | Ink`;

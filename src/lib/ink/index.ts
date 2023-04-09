@@ -53,7 +53,6 @@ export class Shape {
   }
 
   get attributes() {
-    console.log(this.tag, this.attrs);
     const attrs = Object.assign({}, this.attrs);
 
     if (this.tag !== "use") {
@@ -335,6 +334,10 @@ export class Repeat extends Transformation {
     transformation: Transformation,
     shape: Shape
   ): Shape {
+    if (n <= 0) {
+      return combine();
+    }
+
     if (n === 1) {
       return shape;
     }

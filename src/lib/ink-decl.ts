@@ -1,9 +1,12 @@
 export const inkDecl = `
 declare global {
-declare function show(...shapes: Array<Shape>): void;
-declare function draw(...shapes: Array<Shape>): void;
+export function show(...shapes: Array<Shape>): void;
+export function draw(...shapes: Array<Shape>): void;
+export function setViewport(width: number, height: number): void;
+export function enableMarkers(): void;
+export function disableMarkers(): void;
 type Attrs = Record<string, string | number>;
-export declare class Shape {
+export class Shape {
     readonly tag: string;
     readonly attrs: Attrs;
     readonly children: Shape[];
@@ -18,8 +21,8 @@ export declare class Shape {
     rotate(angle: number, anchor?: Point): Shape;
     scale(sx: number, sy: number): Shape;
 }
-export declare function toSVG(shapes: Array<Shape>, width?: number, height?: number): string;
-export declare class Circle extends Shape {
+export function toSVG(shapes: Array<Shape>, width?: number, height?: number): string;
+export class Circle extends Shape {
     readonly r: number;
     readonly args: {
         center: Point;
@@ -28,8 +31,8 @@ export declare class Circle extends Shape {
         center: Point;
     }, attrs?: Attrs);
 }
-export declare function circle(r: number, args?: typeof Circle.prototype.args, attrs?: Attrs): Circle;
-export declare class Ellipse extends Shape {
+export function circle(r: number, args?: typeof Circle.prototype.args, attrs?: Attrs): Circle;
+export class Ellipse extends Shape {
     readonly width: number;
     readonly height: number;
     readonly args: {
@@ -39,8 +42,8 @@ export declare class Ellipse extends Shape {
         center: Point;
     }, attrs?: Attrs);
 }
-export declare function ellipse(width: number, height: number, args?: typeof Ellipse.prototype.args, attrs?: Attrs): Ellipse;
-export declare class Rect extends Shape {
+export function ellipse(width: number, height: number, args?: typeof Ellipse.prototype.args, attrs?: Attrs): Ellipse;
+export class Rect extends Shape {
     readonly width: number;
     readonly height: number;
     readonly args: {
@@ -50,58 +53,58 @@ export declare class Rect extends Shape {
         center: Point;
     }, attrs?: Attrs);
 }
-export declare function rect(width: number, height: number, args?: typeof Rect.prototype.args, attrs?: Attrs): Rect;
-export declare class Line extends Shape {
+export function rect(width: number, height: number, args?: typeof Rect.prototype.args, attrs?: Attrs): Rect;
+export class Line extends Shape {
     readonly start: Point;
     readonly end: Point;
     readonly args: {};
     constructor(start: Point, end: Point, args?: {}, attrs?: Attrs);
 }
-export declare function line(start: Point, end: Point, args?: typeof Line.prototype.args, attrs?: Attrs): Line;
-export declare class Group extends Shape {
+export function line(start: Point, end: Point, args?: typeof Line.prototype.args, attrs?: Attrs): Line;
+export class Group extends Shape {
     readonly children: Shape[];
     readonly attrs: Attrs;
     constructor(children: Shape[], attrs?: Attrs);
 }
-export declare function combine(...shapes: Array<Shape>): Shape;
-export declare class Point {
+export function combine(...shapes: Array<Shape>): Shape;
+export class Point {
     readonly x: number;
     readonly y: number;
     constructor(x: number, y: number);
     static get zero(): Point;
     equals(other: Point): boolean;
 }
-export declare function point(x: number, y: number): Point;
-export declare abstract class Transformation {
+export function point(x: number, y: number): Point;
+export abstract class Transformation {
     apply(shape: Shape): Shape;
     join(transform: Transformation): Transformation;
     abstract toString(): string;
 }
-export declare class MultipleTransformations extends Transformation {
+export class MultipleTransformations extends Transformation {
     private readonly transformations;
     constructor(transformations: Transformation[]);
     join(transformation: Transformation): Transformation;
     toString(): string;
 }
-export declare class Translate extends Transformation {
+export class Translate extends Transformation {
     readonly x: number;
     readonly y: number;
     constructor(x: number, y: number);
     toString(): string;
 }
-export declare class Rotate extends Transformation {
+export class Rotate extends Transformation {
     readonly angle: number;
     readonly anchor: Point;
     constructor(angle: number, anchor?: Point);
     toString(): string;
 }
-export declare class Scale extends Transformation {
+export class Scale extends Transformation {
     readonly sx: number;
     readonly sy: number;
     constructor(sx: number, sy: number);
     toString(): string;
 }
-export declare class Repeat extends Transformation {
+export class Repeat extends Transformation {
     readonly n: number;
     readonly transformation: Transformation;
     constructor(n: number, transformation: Transformation);

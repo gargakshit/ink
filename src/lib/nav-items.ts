@@ -11,7 +11,7 @@ export const navItems = [
     startsWith: "/ink/",
   },
   {
-    title: "Feeling Lucky",
+    title: "I'm Feeling Lucky",
     url: "/lucky",
     exact: true,
   },

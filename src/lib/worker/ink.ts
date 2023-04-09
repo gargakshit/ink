@@ -5,8 +5,35 @@ Object.entries(inkLib).forEach(
   ([name, value]) => ((self as any)[name] = value)
 );
 
+function sendLog(type: "log" | "warn" | "error", message: string) {
+  self.postMessage({
+    type: "console",
+    args: { type, msg: message },
+  });
+}
+
+(self as any).sendLog = sendLog;
+function buildScript(source: string) {
+  return `
+const console = {
+  log: (...data) => sendLog("log", data.join(" ")),
+  warn: (...data) => sendLog("warn", data.join(" ")),
+  error: (...data) => sendLog("error", data.join(" "))
+};
+
+try {
+${source}
+} catch (e) {
+  console.error("Execution error:", e);
+}`;
+}
+
 function runCode(source: string) {
-  new Function(source)();
+  markersEnabled = true;
+  viewportWidth = 300;
+  viewportHeight = 300;
+
+  new Function(buildScript(source))();
 }
 
 function executionQueue() {
@@ -25,8 +52,44 @@ function executionQueue() {
 
 const scheduleDrawing = executionQueue();
 
+let viewportWidth = 300;
+let viewportHeight = 300;
+let markersEnabled = true;
+
+(self as any).enableMarkers = () => {
+  markersEnabled = true;
+};
+
+(self as any).disableMarkers = () => {
+  markersEnabled = false;
+};
+
+(self as any).setViewport = (width: number, height: number) => {
+  viewportWidth = width;
+  viewportHeight = height;
+};
+
 (self as any).show = (...shapes: Array<inkLib.Shape>) => {
-  const svg = inkLib.toSVG(shapes);
+  if (markersEnabled) {
+    shapes = [
+      inkLib.rect(viewportWidth, viewportHeight, undefined, { stroke: "#ddd" }),
+      inkLib.line(
+        inkLib.point(-viewportWidth / 2, 0),
+        inkLib.point(viewportWidth / 2, 0),
+        undefined,
+        { stroke: "#ddd" }
+      ),
+      inkLib.line(
+        inkLib.point(0, -viewportHeight / 2),
+        inkLib.point(0, viewportHeight / 2),
+        undefined,
+        { stroke: "#ddd" }
+      ),
+      ...shapes,
+    ];
+  }
+
+  const svg = inkLib.toSVG(shapes, viewportWidth, viewportHeight);
   const response: InkWorkerResponse = {
     type: "renderResult",
     args: { svg },

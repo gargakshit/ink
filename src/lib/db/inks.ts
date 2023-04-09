@@ -3,7 +3,7 @@ import { generateSlug as wordSlug } from "random-word-slugs";
 
 import { generateSlug, getUserId, prisma, UpdateResult } from ".";
 
-const defaultSource = `console.log("Hello Ink!");`;
+const defaultSource = `draw(circle(10));`;
 
 /// Generates a new ink for a provided session, and returns its slug if
 // successful.
