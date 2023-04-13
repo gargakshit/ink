@@ -37,7 +37,11 @@ export async function newInk(session: Session | null): Promise<string | void> {
 export async function updateInk(
   session: Session,
   id: number,
-  properties: { readonly source?: string; readonly rendered?: string }
+  properties: {
+    readonly source?: string;
+    readonly rendered?: string;
+    readonly name?: string;
+  }
 ): Promise<UpdateResult> {
   try {
     const email = session.user?.email!;

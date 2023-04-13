@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Editor, { type Monaco } from "@monaco-editor/react";
-import { Loading } from "@nextui-org/react";
+import { Input, Loading } from "@nextui-org/react";
 import type { editor } from "monaco-editor";
 
 import { inkDecl } from "@/lib/ink-decl";
@@ -30,6 +30,7 @@ interface Props {
   initialCode: string;
   canEdit: boolean;
   id: number;
+  name: string;
   onRun: (source: string) => void;
 }
 
@@ -37,6 +38,12 @@ export default function InkEditor(props: Props) {
   const [editor, setEditor] = useState<editor.IStandaloneCodeEditor | null>(
     null
   );
+  const [name, setName] = useState(props.name);
+
+  useEffect(() => {
+    setName(props.name);
+  }, [props.name]);
+
   const scheduleRequest = debouncer(500, 10000);
 
   useEffect(() => {
@@ -151,6 +158,23 @@ export default function InkEditor(props: Props) {
         }}
         onMount={editorMount}
         onChange={onChange}
+      />
+      <Input
+        underlined
+        value={name}
+        style={{ fontWeight: "bold" }}
+        readOnly={!props.canEdit}
+        onChange={(e) => {
+          setName(e.target.value);
+          scheduleRequest(async () => {
+            await fetch(`/api/ink/${props.id}`, {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ name: e.target.value }),
+            });
+            window.onbeforeunload = null;
+          });
+        }}
       />
     </div>
   );

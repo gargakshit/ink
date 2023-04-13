@@ -77,7 +77,11 @@ export default function EditorPage(props: Props) {
   }, [ink, canEdit]);
 
   function getTitle() {
-    return `${canEdit ? "Editing" : "Viewing"} "${props.ink.name}" | Ink`;
+    if (canEdit) {
+      return "Editor | Ink";
+    }
+
+    return `"Viewing" "${props.ink.name}" | Ink`;
   }
 
   function resetStateFromProps() {
@@ -102,6 +106,7 @@ export default function EditorPage(props: Props) {
             initialCode={ink.source}
             canEdit={canEdit}
             id={ink.id}
+            name={ink.name}
             onRun={(source) => requestWorker({ type: "run", args: { source } })}
           />
           <InkViewer svg={rendered} />

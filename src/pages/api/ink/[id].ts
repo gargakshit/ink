@@ -21,8 +21,12 @@ async function patch(req: NextApiRequest, res: NextApiResponse) {
   const id = req.query.id;
   const source = req.body.source;
   const rendered = req.body.rendered;
+  const name = req.body.name;
 
-  if (!id || (source === undefined && rendered === undefined)) {
+  if (
+    !id ||
+    (source === undefined && rendered === undefined && name === undefined)
+  ) {
     return res.status(400).send("Bad request");
   }
 
@@ -31,6 +35,7 @@ async function patch(req: NextApiRequest, res: NextApiResponse) {
     await updateInk(session, Number.parseInt(id as string), {
       source,
       rendered,
+      name,
     })
   );
 }
