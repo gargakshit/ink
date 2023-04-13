@@ -5,6 +5,7 @@ import NextLink from "next/link";
 
 import { navItems } from "@/lib/nav-items";
 import NavUser from "./NavUser";
+import { useSession } from "next-auth/react";
 
 function isActive(
   pathname: string,
@@ -19,6 +20,8 @@ function isActive(
 
 export default function Nav() {
   const router = useRouter();
+  const { data: session } = useSession();
+  const items = navItems(session?.user !== undefined);
 
   return (
     <Navbar variant="sticky">
@@ -40,7 +43,7 @@ export default function Nav() {
         variant="highlight"
         enableCursorHighlight
       >
-        {navItems.map((item) => (
+        {items.map((item) => (
           <Navbar.Link
             key={item.title}
             isActive={isActive(router.pathname, item)}
@@ -65,7 +68,7 @@ export default function Nav() {
         <NavUser />
       </Navbar.Content>
       <Navbar.Collapse>
-        {navItems.map((item) => (
+        {items.map((item) => (
           <Navbar.CollapseItem
             key={item.title}
             activeColor="secondary"
