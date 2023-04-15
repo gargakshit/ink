@@ -23,6 +23,15 @@ export async function signUp(user: {
   }
 }
 
+export async function getRandomUser() {
+  return prisma.$queryRaw<[{ slug: string }]>`
+      SELECT slug
+      FROM "User"
+      ORDER BY random()
+      LIMIT 1
+  `;
+}
+
 export function getUserId(email: string) {
   return prisma.user.findFirst({ where: { email }, select: { id: true } });
 }

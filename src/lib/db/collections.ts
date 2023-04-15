@@ -54,6 +54,15 @@ export async function loadCollection(slug: string) {
   });
 }
 
+export async function getRandomCollection() {
+  return prisma.$queryRaw<[{ slug: string }]>`
+      SELECT slug
+      FROM "Collection"
+      ORDER BY random()
+      LIMIT 1
+  `;
+}
+
 export async function getMyCollectionsHome(session: Session) {
   const email = session.user?.email!;
   const user = await getUserId(email);

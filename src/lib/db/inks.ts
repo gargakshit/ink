@@ -41,15 +41,13 @@ export async function exploreInks(): Promise<
     lastExploreAt = now;
     exploreCache = (
       await prisma.$queryRaw<
-        [
-          {
-            name: string;
-            rendered: string | null;
-            slug: string;
-            user_name: string;
-            user_avatar: string;
-          }
-        ]
+        Array<{
+          name: string;
+          rendered: string | null;
+          slug: string;
+          user_name: string;
+          user_avatar: string;
+        }>
       >`SELECT "Ink".name as name, rendered, "Ink".slug as slug, U.avatar as "user_avatar", U.name as "user_name"
         FROM "Ink"
                  JOIN User U on U.id = Ink.creatorId
@@ -68,6 +66,15 @@ export async function exploreInks(): Promise<
   }
 
   return exploreCache;
+}
+
+export async function getRandomInk() {
+  return prisma.$queryRaw<[{ slug: string }]>`
+      SELECT slug
+      FROM "Ink"
+      ORDER BY random()
+      LIMIT 1
+  `;
 }
 
 /// Generates a new ink for a provided session, and returns its slug if

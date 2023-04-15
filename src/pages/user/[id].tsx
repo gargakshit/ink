@@ -22,14 +22,22 @@ export default function UserPage(props: Props) {
         <Spacer />
         <Spacer />
         <div className="collection-header">
-          <div>
-            <h1>{props.user.name}</h1>
-            <p className="sub-t">
-              {props.user.inks.length} ink
-              {props.user.inks.length !== 1 && "s"},&nbsp;
-              {props.user.collections.length} collection
-              {props.user.collections.length !== 1 && "s"}
-            </p>
+          <div className="flex user-header">
+            <img
+              src={props.user.avatar}
+              alt="avatar"
+              width="80px"
+              height="80px"
+            />
+            <div>
+              <h1>{props.user.name}</h1>
+              <p className="sub-t">
+                {props.user.inks.length} ink
+                {props.user.inks.length !== 1 && "s"},&nbsp;
+                {props.user.collections.length} collection
+                {props.user.collections.length !== 1 && "s"}
+              </p>
+            </div>
           </div>
         </div>
         <Spacer />
