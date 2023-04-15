@@ -10,7 +10,6 @@ import {
 } from "@nextui-org/react";
 
 import type { DBResult, getMyCollections } from "@/lib/db";
-import collections from "@/pages/api/collections";
 
 export default function AddToCollection(props: { inkId: number }) {
   const [visible, setVisible] = useState(false);
@@ -124,7 +123,7 @@ function CollectionCard(props: { collection: Collection; inkId: number }) {
               fontSize: "$sm",
             }}
           >
-            {numItems} item{numItems !== 1 && "s"}
+            {numItems} ink{numItems !== 1 && "s"}
           </Text>
         </Row>
       </Card.Body>

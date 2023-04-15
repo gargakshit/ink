@@ -63,6 +63,10 @@ body {
   align-items: center;
 }
 
+.px-12 {
+  padding: 0 12px;
+}
+
 .avatar {
   display: flex;
   align-items: center;

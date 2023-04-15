@@ -1,12 +1,77 @@
 import { Session } from "next-auth";
 import { generateSlug as wordSlug } from "random-word-slugs";
 
-import { generateSlug, getUserId, prisma, UpdateResult } from ".";
+import { DBResult, generateSlug, getUserId, prisma, UpdateResult } from ".";
 
 const defaultSource = `draw(circle(10));`;
 
+export async function getRecentlyEdited(session: Session) {
+  const email = session.user?.email!;
+  const user = await getUserId(email);
+  if (!user) {
+    return;
+  }
+
+  return prisma.ink.findMany({
+    where: { creatorId: user.id },
+    select: {
+      name: true,
+      rendered: true,
+      slug: true,
+    },
+    orderBy: { updatedAt: "desc" },
+    take: 4,
+  });
+}
+
+let exploreCache: DBResult<typeof exploreInks> | undefined;
+let lastExploreAt = Date.now();
+const exploreBust = 5 * 60 * 1000; // 5 minutes
+
+export async function exploreInks(): Promise<
+  Array<{
+    name: string;
+    rendered: string | null;
+    slug: string;
+    creator: { name: string; avatar: string };
+  }>
+> {
+  const now = Date.now();
+  if (!exploreCache || now - lastExploreAt >= exploreBust) {
+    lastExploreAt = now;
+    exploreCache = (
+      await prisma.$queryRaw<
+        [
+          {
+            name: string;
+            rendered: string | null;
+            slug: string;
+            user_name: string;
+            user_avatar: string;
+          }
+        ]
+      >`SELECT "Ink".name as name, rendered, "Ink".slug as slug, U.avatar as "user_avatar", U.name as "user_name"
+        FROM "Ink"
+                 JOIN User U on U.id = Ink.creatorId
+        ORDER BY random()
+        LIMIT 12
+      `
+    ).map((d) => ({
+      name: d.name,
+      rendered: d.rendered,
+      slug: d.slug,
+      creator: {
+        name: d.user_name,
+        avatar: d.user_avatar,
+      },
+    }));
+  }
+
+  return exploreCache;
+}
+
 /// Generates a new ink for a provided session, and returns its slug if
-// successful.
+/// successful.
 export async function newInk(session: Session | null): Promise<string | void> {
   if (!session) {
     return;

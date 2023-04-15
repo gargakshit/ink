@@ -1,13 +1,7 @@
 import React from "react";
-import {
-  Avatar,
-  Button,
-  Dropdown,
-  Link,
-  Navbar,
-  Text,
-} from "@nextui-org/react";
+import { Avatar, Button, Dropdown, Navbar, Text } from "@nextui-org/react";
 import { signIn, signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 
 export default function NavUser() {
   const { data: session } = useSession();
@@ -25,7 +19,7 @@ export default function NavUser() {
       >
         <Dropdown.Item key="profile">
           <Text b color="inherit" css={{ d: "flex" }}>
-            <Link color="inherit" href="/me">
+            <Link style={{ color: "inherit" }} href="/me">
               {session.user.email}
             </Link>
           </Text>

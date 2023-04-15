@@ -25,13 +25,13 @@ export default function CollectionPage(props: Props) {
           <div>
             <h1>{props.collection.name}</h1>
             <p className="sub-t">
-              {props.collection.inks.length} item
+              {props.collection.inks.length} ink
               {props.collection.inks.length !== 1 && "s"}
             </p>
           </div>
           <Link
             className="avatar"
-            href={`/users/${props.collection.curator.slug}`}
+            href={`/user/${props.collection.curator.slug}`}
           >
             <img
               src={props.collection.curator.avatar}

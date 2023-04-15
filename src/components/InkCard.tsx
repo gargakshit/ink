@@ -7,7 +7,7 @@ export default function InkCard(props: {
     name: string;
     slug: string;
     rendered: string | null;
-    creator: { name: string; avatar: string; slug: string };
+    creator?: { name: string; avatar: string };
   };
 }) {
   const router = useRouter();
@@ -36,15 +36,17 @@ export default function InkCard(props: {
           }}
         >
           <Text b>{props.ink.name}</Text>
-          <div className="avatar-small">
-            <img
-              src={props.ink.creator.avatar}
-              alt="avatar"
-              width="24px"
-              height="24px"
-            />
-            <p>{props.ink.creator.name}</p>
-          </div>
+          {props.ink.creator && (
+            <div className="avatar-small">
+              <img
+                src={props.ink.creator.avatar}
+                alt="avatar"
+                width="24px"
+                height="24px"
+              />
+              <p>{props.ink.creator.name}</p>
+            </div>
+          )}
         </Card.Footer>
       </Card>
     </Grid>

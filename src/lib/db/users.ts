@@ -26,3 +26,39 @@ export async function signUp(user: {
 export function getUserId(email: string) {
   return prisma.user.findFirst({ where: { email }, select: { id: true } });
 }
+
+export function getUserSlug(email: string) {
+  return prisma.user.findFirst({ where: { email }, select: { slug: true } });
+}
+
+export function getUser(slug: string) {
+  return prisma.user.findFirst({
+    where: { slug },
+    select: {
+      name: true,
+      avatar: true,
+      slug: true,
+      inks: {
+        select: {
+          name: true,
+          slug: true,
+          rendered: true,
+        },
+      },
+      collections: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          inks: {
+            select: {
+              ink: {
+                select: { rendered: true },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+}
