@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 interface Props {
   visible: boolean;
   onClose: () => void;
+  redirect?: boolean;
 }
 
 export default function NewCollection(props: Props) {
@@ -49,7 +50,9 @@ export default function NewCollection(props: Props) {
               body: JSON.stringify({ name }),
             });
             props.onClose();
-            await router.replace("/collections");
+            if (!(props.redirect === false)) {
+              await router.replace("/collections");
+            }
             setLoading(false);
             setName("");
           }}

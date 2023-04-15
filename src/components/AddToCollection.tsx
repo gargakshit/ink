@@ -10,6 +10,7 @@ import {
 } from "@nextui-org/react";
 
 import type { DBResult, getMyCollections } from "@/lib/db";
+import NewCollection from "@/components/NewCollection";
 
 export default function AddToCollection(props: { inkId: number }) {
   const [visible, setVisible] = useState(false);
@@ -54,6 +55,8 @@ function ModalBody(props: { inkId: number }) {
     DBResult<typeof getMyCollections> | undefined
   >(undefined);
 
+  const [visible, setVisible] = useState(false);
+
   useEffect(() => {
     fetch("/api/collections")
       .then((res) => res.json())
@@ -71,6 +74,21 @@ function ModalBody(props: { inkId: number }) {
 
   return (
     <div className="card-list">
+      <Button bordered auto onClick={() => setVisible(true)}>
+        + &nbsp; New Collection
+      </Button>
+      <NewCollection
+        visible={visible}
+        redirect={false}
+        onClose={() => {
+          setVisible(false);
+          fetch("/api/collections")
+            .then((res) => res.json())
+            .then((res: DBResult<typeof getMyCollections>) =>
+              setCollections(res)
+            );
+        }}
+      />
       {collections.map((collection, index) => (
         <CollectionCard
           collection={collection}
