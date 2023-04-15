@@ -11,6 +11,11 @@ export function generateSlug(text: string): string {
   return s + "-" + u;
 }
 
+export type DBResult<T extends (...args: any) => any> = NonNullable<
+  Awaited<ReturnType<T>>
+>;
+
+export * from "./collections";
 export * from "./inks";
 export * from "./types";
 export * from "./users";

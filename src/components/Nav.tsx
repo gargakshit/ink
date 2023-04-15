@@ -37,12 +37,7 @@ export default function Nav() {
           Ink
         </Text>
       </Navbar.Brand>
-      <Navbar.Content
-        activeColor="secondary"
-        hideIn="xs"
-        variant="highlight"
-        enableCursorHighlight
-      >
+      <Navbar.Content hideIn="xs" variant="highlight" enableCursorHighlight>
         {items.map((item) => (
           <Navbar.Link
             key={item.title}
@@ -71,7 +66,6 @@ export default function Nav() {
         {items.map((item) => (
           <Navbar.CollapseItem
             key={item.title}
-            activeColor="secondary"
             isActive={isActive(router.pathname, item)}
           >
             <NextLink

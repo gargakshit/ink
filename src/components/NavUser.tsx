@@ -16,18 +16,11 @@ export default function NavUser() {
     <Dropdown placement="bottom-right">
       <Navbar.Item>
         <Dropdown.Trigger>
-          <Avatar
-            bordered
-            as="button"
-            color="secondary"
-            size="md"
-            src={session.user.image!}
-          />
+          <Avatar bordered as="button" size="md" src={session.user.image!} />
         </Dropdown.Trigger>
       </Navbar.Item>
       <Dropdown.Menu
         aria-label="User menu actions"
-        color="secondary"
         onAction={(actionKey) => console.log({ actionKey })}
       >
         <Dropdown.Item key="profile">
@@ -43,8 +36,6 @@ export default function NavUser() {
       </Dropdown.Menu>
     </Dropdown>
   ) : (
-    <Button color="secondary" onClick={() => signIn("google")}>
-      Login with Google
-    </Button>
+    <Button onClick={() => signIn("google")}>Login with Google</Button>
   );
 }

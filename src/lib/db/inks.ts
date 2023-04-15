@@ -73,6 +73,20 @@ export async function updateInk(
 export function loadInk(slug: string) {
   return prisma.ink.findFirst({
     where: { slug },
-    include: { creator: true },
+    select: {
+      slug: true,
+      name: true,
+      source: true,
+      rendered: true,
+      id: true,
+      creator: {
+        select: {
+          slug: true,
+          avatar: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
   });
 }

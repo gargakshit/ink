@@ -27,10 +27,49 @@ export async function getMyCollections(session: Session) {
     return;
   }
 
-  const collections = prisma.collection.findMany({
+  return prisma.collection.findMany({
     where: { curatorId: user.id },
-    include: { inks: true },
+    select: {
+      id: true,
+      inks: true,
+      name: true,
+      slug: true,
+    },
+    orderBy: { createdAt: "desc" },
   });
+}
 
-  return collections;
+export async function putInCollection(
+  session: Session,
+  id: number,
+  inkId: number,
+  selected: boolean
+) {
+  const email = session.user?.email!;
+  const user = await getUserId(email);
+  if (!user) {
+    return;
+  }
+
+  const collection = await prisma.collection.findFirst({
+    where: { id, curatorId: user.id },
+    select: { id: true },
+  });
+  if (!collection) {
+    return;
+  }
+
+  if (selected) {
+    await prisma.inkInCollection.upsert({
+      where: { inkId_collectionId: { inkId, collectionId: collection.id } },
+      create: { inkId, collectionId: collection.id },
+      update: {},
+    });
+  } else {
+    try {
+      await prisma.inkInCollection.delete({
+        where: { inkId_collectionId: { inkId, collectionId: collection.id } },
+      });
+    } catch {}
+  }
 }

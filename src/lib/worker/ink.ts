@@ -71,19 +71,21 @@ let markersEnabled = true;
 
 (self as any).show = (...shapes: Array<inkLib.Shape>) => {
   if (markersEnabled) {
+    const stroke = "#ffffff66";
+
     shapes = [
-      inkLib.rect(viewportWidth, viewportHeight, undefined, { stroke: "#ddd" }),
+      inkLib.rect(viewportWidth, viewportHeight, undefined, { stroke }),
       inkLib.line(
         inkLib.point(-viewportWidth / 2, 0),
         inkLib.point(viewportWidth / 2, 0),
         undefined,
-        { stroke: "#ddd" }
+        { stroke }
       ),
       inkLib.line(
         inkLib.point(0, -viewportHeight / 2),
         inkLib.point(0, viewportHeight / 2),
         undefined,
-        { stroke: "#ddd" }
+        { stroke }
       ),
       ...shapes,
     ];

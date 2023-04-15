@@ -28,7 +28,6 @@ export default function NewCollection(props: Props) {
           fullWidth
           size="lg"
           placeholder="Name"
-          color="secondary"
           bordered
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -37,7 +36,12 @@ export default function NewCollection(props: Props) {
       <Modal.Footer>
         <Button
           auto
+          flat
           onPress={async () => {
+            if (name.length === 0) {
+              return;
+            }
+
             setLoading(true);
             await fetch("/api/collections", {
               method: "POST",
@@ -49,12 +53,11 @@ export default function NewCollection(props: Props) {
             setLoading(false);
             setName("");
           }}
-          disabled={loading}
-          color="secondary"
+          disabled={name.length === 0 || loading}
         >
           {loading && (
             <>
-              <Loading color="secondary" size="sm" />
+              <Loading size="sm" />
               <Spacer />
             </>
           )}{" "}

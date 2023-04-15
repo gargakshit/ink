@@ -4,7 +4,7 @@ import type { GetServerSideProps } from "next";
 import { getServerSession } from "next-auth";
 
 import InkEditor from "@/components/InkEditor";
-import { loadInk } from "@/lib/db";
+import { type DBResult, loadInk } from "@/lib/db";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { InkWorkerRequest, InkWorkerResponse } from "@/lib/worker/rpc";
 import InkViewer from "@/components/InkViewer";
@@ -12,7 +12,7 @@ import { debouncer } from "@/utils/debounce";
 
 type Props = {
   canEdit: boolean;
-  ink: NonNullable<Awaited<ReturnType<typeof loadInk>>>;
+  ink: DBResult<typeof loadInk>;
 };
 
 export default function EditorPage(props: Props) {
