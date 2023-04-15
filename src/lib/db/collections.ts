@@ -20,6 +20,63 @@ export async function createCollection(session: Session, name: string) {
   });
 }
 
+export async function loadCollection(slug: string) {
+  return prisma.collection.findFirst({
+    where: { slug },
+    select: {
+      name: true,
+      curator: {
+        select: {
+          name: true,
+          avatar: true,
+          slug: true,
+        },
+      },
+      inks: {
+        select: {
+          ink: {
+            select: {
+              name: true,
+              rendered: true,
+              slug: true,
+              creator: {
+                select: {
+                  name: true,
+                  avatar: true,
+                  slug: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export async function getMyCollectionsHome(session: Session) {
+  const email = session.user?.email!;
+  const user = await getUserId(email);
+  if (!user) {
+    return;
+  }
+
+  return prisma.collection.findMany({
+    where: { curatorId: user.id },
+    select: {
+      id: true,
+      inks: {
+        select: {
+          ink: { select: { rendered: true } },
+        },
+      },
+      name: true,
+      slug: true,
+    },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
 export async function getMyCollections(session: Session) {
   const email = session.user?.email!;
   const user = await getUserId(email);

@@ -81,7 +81,7 @@ export default function EditorPage(props: Props) {
       return "Editor | Ink";
     }
 
-    return `"Viewing" "${props.ink.name}" | Ink`;
+    return `Viewing "${props.ink.name}" | Ink`;
   }
 
   function resetStateFromProps() {
@@ -99,8 +99,6 @@ export default function EditorPage(props: Props) {
         <title>{title}</title>
       </Head>
       <div className="editor-container">
-        {/*<div>{ink.name}</div>*/}
-        {/*<div>{canEdit ? "Can edit" : "No edit"}</div>*/}
         <div className="editor-split">
           <InkEditor
             initialCode={ink.source}

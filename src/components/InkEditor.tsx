@@ -179,8 +179,8 @@ export default function InkEditor(props: Props) {
             });
           }}
         />
-        <Spacer />
-        <AddToCollection inkId={props.id} />
+        {props.canEdit && <Spacer />}
+        {props.canEdit && <AddToCollection inkId={props.id} />}
       </div>
     </div>
   );
