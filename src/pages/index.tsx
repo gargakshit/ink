@@ -13,15 +13,20 @@ interface Props {
 }
 
 let cachedExplore: DBResult<typeof exploreInks> = [];
+let cachedExploreLoaded = false;
 
 export default function Home(props: Props) {
   const [explore, setExplore] =
     useState<DBResult<typeof exploreInks>>(cachedExplore);
-  const [exploreLoaded, setExploreLoaded] = useState(false);
+  const [exploreLoaded, setExploreLoaded] = useState(cachedExploreLoaded);
 
   useEffect(() => {
     cachedExplore = explore;
   }, [explore]);
+
+  useEffect(() => {
+    cachedExploreLoaded = exploreLoaded;
+  }, [exploreLoaded]);
 
   useEffect(() => {
     if (cachedExplore.length > 0) return;
