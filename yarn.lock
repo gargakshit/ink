@@ -1190,6 +1190,11 @@ styled-jsx@5.1.1:
   dependencies:
     client-only "0.0.1"
 
+topbar@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/topbar/-/topbar-2.0.1.tgz#03a0ae1a92ff9566af8b0c7ddf711f5303bf40a3"
+  integrity sha512-4KvcxrJuGS3wkx8QacT7dfnkwyPJOuDzGUvHO/GDZqgoEEEFKTnZqCC6PYcvuZ0OfMNdyyKeAzVB2MPk0BIe8A==
+
 tslib@^2.4.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.5.0.tgz#42bfed86f5787aeb41d031866c8f402429e0fddf"

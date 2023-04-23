@@ -1,6 +1,8 @@
 import { NextUIProvider, createTheme } from "@nextui-org/react";
 import type { AppProps } from "next/app";
+import Router from "next/router";
 import { SessionProvider } from "next-auth/react";
+import { useEffect } from "react";
 
 import Layout from "@/components/Layout";
 
@@ -26,6 +28,14 @@ export default function App({
       radii: { lg: "4px" },
     },
   });
+
+  useEffect(() => {
+    import("topbar").then(({ default: topbar }) => {
+      Router.events.on("routeChangeStart", () => topbar.show(72));
+      Router.events.on("routeChangeComplete", () => topbar.hide());
+      Router.events.on("routeChangeError", () => topbar.hide());
+    });
+  }, [Router]);
 
   return (
     <SessionProvider session={session}>
