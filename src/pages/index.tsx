@@ -17,6 +17,7 @@ let cachedExplore: DBResult<typeof exploreInks> = [];
 export default function Home(props: Props) {
   const [explore, setExplore] =
     useState<DBResult<typeof exploreInks>>(cachedExplore);
+  const [exploreLoaded, setExploreLoaded] = useState(false);
 
   useEffect(() => {
     cachedExplore = explore;
@@ -27,7 +28,10 @@ export default function Home(props: Props) {
 
     fetch("/api/ink/explore")
       .then((res) => res.json())
-      .then(setExplore);
+      .then((res) => {
+        setExplore(res);
+        setExploreLoaded(true);
+      });
   }, []);
 
   return (
@@ -38,7 +42,7 @@ export default function Home(props: Props) {
       <Container md>
         <Spacer />
         <Spacer />
-        {props.recentlyEdited && (
+        {props.recentlyEdited && props.recentlyEdited.length !== 0 && (
           <>
             <div className="collection-header">
               <h1>Recently Edited</h1>
@@ -51,27 +55,39 @@ export default function Home(props: Props) {
             <Spacer />
           </>
         )}
-        <div className="collection-header">
-          <h1>Explore</h1>
-        </div>
-        <Grid.Container gap={2}>
-          {explore.length === 0 && (
-            <div className="flex col center">
-              <Spacer />
-              <div className="flex center">
-                <Loading />
-                <Spacer />
-                <b style={{ opacity: "0.5" }}>
-                  Are you inking, or am I inking, or are we both inking?
-                </b>
-              </div>
-              <Spacer />
+        {exploreLoaded && explore.length !== 0 && (
+          <>
+            <div className="collection-header">
+              <h1>Explore</h1>
             </div>
-          )}
-          {explore.map((ink, index) => (
-            <InkCard ink={ink} key={index} />
-          ))}
-        </Grid.Container>
+            <Grid.Container gap={2}>
+              {!exploreLoaded && (
+                <div className="flex col center">
+                  <Spacer />
+                  <div className="flex center">
+                    <Loading />
+                    <Spacer />
+                    <b style={{ opacity: "0.5" }}>
+                      Are you inking, or am I inking, or are we both inking?
+                    </b>
+                  </div>
+                  <Spacer />
+                </div>
+              )}
+              {explore.map((ink, index) => (
+                <InkCard ink={ink} key={index} />
+              ))}
+            </Grid.Container>
+          </>
+        )}
+        {exploreLoaded && explore.length === 0 && (
+          <div className="flex col center">
+            <Spacer />
+            <b style={{ opacity: "0.5" }}>
+              Sometimes, there is nothing you can see
+            </b>
+          </div>
+        )}
       </Container>
     </>
   );

@@ -4,6 +4,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { signUp } from "@/lib/db";
 
 export const authOptions: AuthOptions = {
+  secret: process.env.NEXTAUTH_URL,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
