@@ -1,11 +1,14 @@
 import React from "react";
-import { Avatar, Dropdown, Link, Navbar, Text } from "@nextui-org/react";
+import { Navbar, Spacer } from "@nextui-org/react";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
 
 import { navItems } from "@/lib/nav-items";
 import NavUser from "./NavUser";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+
+import logo from "../assets/logo.webp";
 
 function isActive(
   pathname: string,
@@ -26,16 +29,9 @@ export default function Nav() {
   return (
     <Navbar variant="sticky">
       <Navbar.Toggle showIn="xs" />
-      <Navbar.Brand
-        css={{
-          "@xs": {
-            w: "12%",
-          },
-        }}
-      >
-        <Text b color="inherit" hideIn="xs">
-          Ink
-        </Text>
+      <Navbar.Brand>
+        <Spacer />
+        <Image src={logo} alt="Ink Logo" height="40px" width="56px" />
       </Navbar.Brand>
       <Navbar.Content hideIn="xs" variant="highlight" enableCursorHighlight>
         {items.map((item) => (
