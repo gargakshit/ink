@@ -31,7 +31,7 @@ export default function Nav() {
       <Navbar.Toggle showIn="xs" />
       <Navbar.Brand>
         <Spacer />
-        <Image src={logo} alt="Ink Logo" height="40px" width="56px" />
+        <Image src={logo} alt="Ink Logo" height={40} width={56} />
       </Navbar.Brand>
       <Navbar.Content hideIn="xs" variant="highlight" enableCursorHighlight>
         {items.map((item) => (
