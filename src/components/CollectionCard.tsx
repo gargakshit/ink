@@ -28,6 +28,7 @@ export default function CollectionCard(props: {
               <div
                 className="card-ink-preview"
                 dangerouslySetInnerHTML={{ __html: ink.ink.rendered! }}
+                key={index}
               />
             ))}
             {renderedInks.length === 0 && (

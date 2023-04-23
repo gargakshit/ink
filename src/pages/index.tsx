@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { Container, Grid, Loading, Spacer } from "@nextui-org/react";
 import type { GetServerSideProps } from "next";
@@ -6,7 +7,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { type DBResult, type exploreInks, getRecentlyEdited } from "@/lib/db";
 import InkCard from "@/components/InkCard";
-import { useEffect, useState } from "react";
 
 interface Props {
   recentlyEdited: DBResult<typeof getRecentlyEdited> | null | undefined;

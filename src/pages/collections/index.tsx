@@ -1,12 +1,4 @@
-import {
-  Button,
-  Card,
-  Container,
-  Grid,
-  Row,
-  Spacer,
-  Text,
-} from "@nextui-org/react";
+import { Button, Container, Grid, Spacer } from "@nextui-org/react";
 import React, { useState } from "react";
 import type { GetServerSideProps } from "next";
 import { getServerSession } from "next-auth";
