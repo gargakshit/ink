@@ -3,7 +3,7 @@ import { generateSlug as wordSlug } from "random-word-slugs";
 
 import { DBResult, generateSlug, getUserId, prisma, UpdateResult } from ".";
 
-const defaultSource = `draw(circle(10));`;
+const defaultSource = "draw(circle(10));";
 
 export async function getRecentlyEdited(session: Session) {
   const email = session.user?.email!;
