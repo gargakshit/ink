@@ -12,7 +12,7 @@ import logo from "../assets/logo.webp";
 
 function isActive(
   pathname: string,
-  item: { exact: boolean; url: string; startsWith?: string }
+  item: { exact: boolean; url: string; startsWith?: string },
 ): boolean {
   if (item.exact) {
     return pathname === item.url;

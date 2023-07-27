@@ -36,6 +36,6 @@ async function patch(req: NextApiRequest, res: NextApiResponse) {
       source,
       rendered,
       name,
-    })
+    }),
   );
 }

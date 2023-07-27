@@ -51,7 +51,7 @@ export default function CollectionsPage(props: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps<Props, {}> = async (
-  context
+  context,
 ) => {
   const session = await getServerSession(context.req, context.res, authOptions);
   if (!session) {

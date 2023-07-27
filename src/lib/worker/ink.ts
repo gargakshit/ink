@@ -2,7 +2,7 @@ import * as inkLib from "@/lib/ink";
 import { InkWorkerRequest, InkWorkerResponse } from "@/lib/worker/rpc";
 
 Object.entries(inkLib).forEach(
-  ([name, value]) => ((self as any)[name] = value)
+  ([name, value]) => ((self as any)[name] = value),
 );
 
 function sendLog(type: "log" | "warn" | "error", message: string) {
@@ -80,13 +80,13 @@ let markersEnabled = true;
         inkLib.point(-viewportWidth / 2, 0),
         inkLib.point(viewportWidth / 2, 0),
         undefined,
-        attrs
+        attrs,
       ),
       inkLib.line(
         inkLib.point(0, -viewportHeight / 2),
         inkLib.point(0, viewportHeight / 2),
         undefined,
-        attrs
+        attrs,
       ),
       ...shapes,
     ];

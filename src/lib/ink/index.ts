@@ -30,7 +30,8 @@ function renderTag(tag: string, attrs: Attrs, closed = false) {
 
   const attrText = entries
     .map(
-      ([name, value]) => `${escapeHTML(name)}="${escapeHTML(value.toString())}"`
+      ([name, value]) =>
+        `${escapeHTML(name)}="${escapeHTML(value.toString())}"`,
     )
     .join(" ");
   return `<${tag} ${attrText}${closing}`;
@@ -43,7 +44,7 @@ export class Shape {
     public readonly tag: string,
     public readonly attrs: Attrs = {},
     public readonly children: Shape[] = [],
-    public readonly transformation: Transformation | undefined = undefined
+    public readonly transformation: Transformation | undefined = undefined,
   ) {
     this.id = idSequence.next().value!;
   }
@@ -117,7 +118,7 @@ export class Circle extends Shape {
   constructor(
     public readonly r: number,
     public readonly args = { center: Point.zero },
-    attrs: Attrs = {}
+    attrs: Attrs = {},
   ) {
     super("circle", {
       r: r,
@@ -131,7 +132,7 @@ export class Circle extends Shape {
 export function circle(
   r: number,
   args: typeof Circle.prototype.args = { center: Point.zero },
-  attrs: Attrs = {}
+  attrs: Attrs = {},
 ) {
   return new Circle(r, args, attrs);
 }
@@ -141,7 +142,7 @@ export class Ellipse extends Shape {
     public readonly width: number,
     public readonly height: number,
     public readonly args = { center: Point.zero },
-    attrs: Attrs = {}
+    attrs: Attrs = {},
   ) {
     super("ellipse", {
       rx: width / 2,
@@ -157,7 +158,7 @@ export function ellipse(
   width: number,
   height: number,
   args: typeof Ellipse.prototype.args = { center: Point.zero },
-  attrs: Attrs = {}
+  attrs: Attrs = {},
 ) {
   return new Ellipse(width, height, args, attrs);
 }
@@ -167,7 +168,7 @@ export class Rect extends Shape {
     public readonly width: number,
     public readonly height: number,
     public readonly args = { center: Point.zero },
-    attrs: Attrs = {}
+    attrs: Attrs = {},
   ) {
     super("rect", {
       width: width,
@@ -183,7 +184,7 @@ export function rect(
   width: number,
   height: number,
   args: typeof Rect.prototype.args = { center: Point.zero },
-  attrs: Attrs = {}
+  attrs: Attrs = {},
 ) {
   return new Rect(width, height, args, attrs);
 }
@@ -193,7 +194,7 @@ export class Line extends Shape {
     public readonly start: Point,
     public readonly end: Point,
     public readonly args = {},
-    attrs: Attrs = {}
+    attrs: Attrs = {},
   ) {
     super("line", {
       x1: start.x,
@@ -209,13 +210,16 @@ export function line(
   start: Point,
   end: Point,
   args: typeof Line.prototype.args = {},
-  attrs: Attrs = {}
+  attrs: Attrs = {},
 ) {
   return new Line(start, end, args, attrs);
 }
 
 export class Group extends Shape {
-  constructor(readonly children: Shape[], public readonly attrs: Attrs = {}) {
+  constructor(
+    readonly children: Shape[],
+    public readonly attrs: Attrs = {},
+  ) {
     super("g", attrs, children);
   }
 }
@@ -225,7 +229,10 @@ export function combine(...shapes: Array<Shape>): Shape {
 }
 
 export class Point {
-  constructor(public readonly x: number, public readonly y: number) {}
+  constructor(
+    public readonly x: number,
+    public readonly y: number,
+  ) {}
 
   static get zero() {
     return new Point(0, 0);
@@ -246,7 +253,7 @@ export abstract class Transformation {
       shape.tag,
       Object.assign({}, shape.attrs),
       [...shape.children],
-      shape.transformation ? this.join(shape.transformation) : this
+      shape.transformation ? this.join(shape.transformation) : this,
     );
   }
 
@@ -278,7 +285,10 @@ export class MultipleTransformations extends Transformation {
 }
 
 export class Translate extends Transformation {
-  constructor(public readonly x: number, public readonly y: number) {
+  constructor(
+    public readonly x: number,
+    public readonly y: number,
+  ) {
     super();
   }
 
@@ -290,7 +300,7 @@ export class Translate extends Transformation {
 export class Rotate extends Transformation {
   constructor(
     public readonly angle: number,
-    public readonly anchor = Point.zero
+    public readonly anchor = Point.zero,
   ) {
     super();
   }
@@ -305,7 +315,10 @@ export class Rotate extends Transformation {
 }
 
 export class Scale extends Transformation {
-  constructor(public readonly sx: number, public readonly sy: number) {
+  constructor(
+    public readonly sx: number,
+    public readonly sy: number,
+  ) {
     super();
   }
 
@@ -317,7 +330,7 @@ export class Scale extends Transformation {
 export class Repeat extends Transformation {
   constructor(
     public readonly n: number,
-    public readonly transformation: Transformation
+    public readonly transformation: Transformation,
   ) {
     super();
   }
@@ -332,7 +345,7 @@ export class Repeat extends Transformation {
   private applyRecursive(
     n: number,
     transformation: Transformation,
-    shape: Shape
+    shape: Shape,
   ): Shape {
     if (n <= 0) {
       return combine();
@@ -345,8 +358,8 @@ export class Repeat extends Transformation {
     return combine(
       shape,
       this.applyRecursive(n - 1, transformation, shape).transform(
-        transformation
-      )
+        transformation,
+      ),
     );
   }
 
