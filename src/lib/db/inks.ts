@@ -113,7 +113,7 @@ export async function updateInk(
     readonly source?: string;
     readonly rendered?: string;
     readonly name?: string;
-  }
+  },
 ): Promise<UpdateResult> {
   try {
     const email = session.user?.email!;

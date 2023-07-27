@@ -85,7 +85,7 @@ function ModalBody(props: { inkId: number }) {
           fetch("/api/collections")
             .then((res) => res.json())
             .then((res: DBResult<typeof getMyCollections>) =>
-              setCollections(res)
+              setCollections(res),
             );
         }}
       />
@@ -102,7 +102,7 @@ function ModalBody(props: { inkId: number }) {
 
 function CollectionCard(props: { collection: Collection; inkId: number }) {
   const [selected, setSelected] = useState(
-    props.collection.inks.findIndex((ink) => ink.inkId === props.inkId) !== -1
+    props.collection.inks.findIndex((ink) => ink.inkId === props.inkId) !== -1,
   );
   const numItems = props.collection.inks.length;
 

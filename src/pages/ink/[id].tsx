@@ -45,7 +45,7 @@ export default function EditorPage(props: Props) {
         });
       }
     },
-    [ink, canEdit]
+    [ink, canEdit],
   );
 
   const onWorkerMessage = useCallback(
@@ -61,7 +61,7 @@ export default function EditorPage(props: Props) {
           break;
       }
     },
-    [ink]
+    [ink],
   );
 
   useEffect(() => {
@@ -132,7 +132,7 @@ export const getServerSideProps: GetServerSideProps<
     const session = await getServerSession(
       context.req,
       context.res,
-      authOptions
+      authOptions,
     );
 
     const canEdit =

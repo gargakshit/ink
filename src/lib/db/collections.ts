@@ -109,7 +109,7 @@ export async function putInCollection(
   session: Session,
   id: number,
   inkId: number,
-  selected: boolean
+  selected: boolean,
 ) {
   const email = session.user?.email!;
   const user = await getUserId(email);

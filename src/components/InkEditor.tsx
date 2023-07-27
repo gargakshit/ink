@@ -21,7 +21,7 @@ function Loader() {
   useEffect(
     () =>
       setText(loadingTexts[Math.floor(Math.random() * loadingTexts.length)]),
-    []
+    [],
   );
 
   return <Loading>{text}</Loading>;
@@ -37,7 +37,7 @@ interface Props {
 
 export default function InkEditor(props: Props) {
   const [editor, setEditor] = useState<editor.IStandaloneCodeEditor | null>(
-    null
+    null,
   );
   const [name, setName] = useState(props.name);
 
@@ -98,12 +98,12 @@ export default function InkEditor(props: Props) {
     if (monaco.editor.getModel(monaco.Uri.parse(libUri)) === null) {
       monaco.languages.typescript.javascriptDefaults.addExtraLib(
         inkDecl,
-        libUri
+        libUri,
       );
       monaco.editor.createModel(
         inkDecl,
         "typescript",
-        monaco.Uri.parse(libUri)
+        monaco.Uri.parse(libUri),
       );
     }
 
